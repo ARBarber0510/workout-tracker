@@ -12,7 +12,7 @@ const { route } = require("./html-routes.js");
 
 */
 // GET route to last workout
-router.get("/api/workout", (req, res) => {
+router.get("/api/workouts", (req, res) => {
   Workout.find({})
     .sort({ date: -1 })
     .then(dbWorkout => {
@@ -23,7 +23,7 @@ router.get("/api/workout", (req, res) => {
     });
 });
 // Route to create new workout
-router.post("/api/workout", ({ body }, res) => {
+router.post("/api/workouts", ({ body }, res) => {
   Workout.create({})
     .then(dbWorkout => {
       res.json(dbWorkout);
@@ -34,7 +34,7 @@ router.post("/api/workout", ({ body }, res) => {
 });
 
 // Route to fine workout
-router.get("/api/Workout", (req, res) => {
+router.get("/api/workouts", (req, res) => {
   Workout.find({})
     .sort({ date: -1 })
     .then(dbWorkout => {
