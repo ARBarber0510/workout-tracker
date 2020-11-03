@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const Workout = require("../models/workout.js");
+const { route } = require("./html-routes.js");
+
 
 /* 
   * Add exercises to a previous workout plan.
@@ -10,7 +12,7 @@ const Workout = require("../models/workout.js");
 
 */
 // GET route to last workout
-router.get("/api/Workout", (req, res) => {
+router.get("/api/workout", (req, res) => {
   Workout.find({})
     .sort({ date: -1 })
     .then(dbWorkout => {
@@ -20,9 +22,9 @@ router.get("/api/Workout", (req, res) => {
       res.status(400).json(err);
     });
 });
-// Post
+// Route to create new workout
 router.post("/api/workout", ({ body }, res) => {
-  Workout.create(body)
+  Workout.create({})
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
@@ -31,7 +33,7 @@ router.post("/api/workout", ({ body }, res) => {
     });
 });
 
-
+// Route to fine workout
 router.get("/api/Workout", (req, res) => {
   Workout.find({})
     .sort({ date: -1 })
@@ -43,9 +45,37 @@ router.get("/api/Workout", (req, res) => {
     });
 });
 
+// Route to update workout
 router.put("/api/workouts/:id", (req, res) => {
     console.log(req.body);
     console.log(req.params.id);
+
+    Workout.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          exercises: req.body
+        }
+      },
+      (error, dbWorkout) => {
+        if (error) {
+          res.send(error);
+        } else {
+          res.send(dbWorkout);
+        }
+      }
+    )
+});
+
+
+router.get("/api/workouts/range", (req, res) => {
+  Workout.find({})
+  .then(dbWorkout => {
+    res.json(dbWorkout)
+  })
+  .catch(err => {
+    res.status(400).json(err);
+  });
 })
 
 module.exports = router;
